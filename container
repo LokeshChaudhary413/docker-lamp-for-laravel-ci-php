@@ -1,0 +1,4 @@
+#!/bin/bash
+docker exec -it -u devuser php-container bash 
+
+

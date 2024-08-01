@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#get folder name
+folder=${@: -1}
+
+# Remove the last argument
+set -- "${@:1:$(($#-1))}"
+
+command="cd $folder && php artisan $@;"
+echo "$command"
+
+docker exec -it -u devuser php-container bash -c "$command"

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker exec -it mysql-container bash -c "mysql -u root -p"
