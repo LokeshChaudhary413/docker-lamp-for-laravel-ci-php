@@ -47,5 +47,12 @@ RUN if [ -f composer.json ]; then composer install; fi
 # Copy the Apache configuration file
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Expose port 80
-EXPOSE 80
+# Argument for PHP_PORT
+ARG PHP_PORT=80
+
+# Dynamically expose the port based on the argument
+EXPOSE ${PHP_PORT}
+
+# Set environment variable PHP_PORT to be used in the container
+ENV PHP_PORT=${PHP_PORT}
+

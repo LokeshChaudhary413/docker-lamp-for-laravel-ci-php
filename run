@@ -1,4 +1,52 @@
 #!/bin/bash
 
+# Set the directory to check and create if it does not exist
+DIR="Projects"
+if [ -d "$DIR" ]; then
+  echo "${DIR} Directory Found"
+else
+  mkdir $DIR
+fi
+
+# Define default and fallback ports
+DEFAULT_PORT=80
+COMPOSE_FILE="docker-compose.yml"
+BASE_URL="http://localhost"  # Base URL without port
+
+# Check if docker-compose.yml exists
+if [ ! -f "$COMPOSE_FILE" ]; then
+  echo "Error: $COMPOSE_FILE not found!"
+  exit 1
+fi
+
+# Function to find a free port starting from a given port
+find_free_port() {
+  local PORT=$1
+  while sudo lsof -i :$PORT > /dev/null; do
+    PORT=$((PORT + 1))
+  done
+  echo $PORT
+}
+
+# Find the first available port starting from the default port
+NEW_PORT=$(find_free_port $DEFAULT_PORT)
+
+# Set the APP_URL based on the selected port
+if [ "$NEW_PORT" -eq "$DEFAULT_PORT" ]; then
+  APP_URL="$BASE_URL"
+else
+  APP_URL="$BASE_URL:$NEW_PORT"
+fi
+
+# Update the port mapping for the 'php' service in docker-compose.yml
+# sed -i.bak -E "/services:\n\s*php:\n.*ports:/!b;n;c\    - \"$NEW_PORT:80\"" $COMPOSE_FILE
+
+# Export the PHP_PORT environment variable
+export PHP_PORT=$NEW_PORT
+
+# Stop and remove containers, rebuild, and run the containers
 docker-compose down
 docker-compose up --build -d
+
+# Output the final URL
+echo "Docker is running on URL: $APP_URL"

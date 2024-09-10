@@ -5,11 +5,11 @@ folder=${@: -1}
 # Check for create command 
 if [ "$1" == "create-project" ]; then 
     folder=${@: -1}
-    command="composer $@; cp server.php htaccess $folder; cd $folder; mv htaccess .htaccess"
+    command="cd Projects; composer $@; cp server.php htaccess composer php-artisan $folder; cd Projects/$folder; mv htaccess .htaccess"
 else
     # Remove the last argument
     set -- "${@:1:$(($#-1))}"
-    command="cd $folder && composer $@;"
+    command="cd Projects/$folder && composer $@;"
 fi
 
 echo "$command"
