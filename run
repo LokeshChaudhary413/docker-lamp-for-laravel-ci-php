@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Stop and remove containers
+docker-compose down
+
 # Set the directory to check and create if it does not exist
 DIR="Projects"
 if [ -d "$DIR" ]; then
@@ -44,9 +47,13 @@ fi
 # Export the PHP_PORT environment variable
 export PHP_PORT=$NEW_PORT
 
-# Stop and remove containers, rebuild, and run the containers
-docker-compose down
+# Export the APP_URL
+export APP_URL=$APP_URL
+
+# Rebuild, and run the containers
 docker-compose up --build -d
+# docker-compose up -d
 
 # Output the final URL
-echo "Docker is running on URL: $APP_URL"
+echo "Server is running on URL: $APP_URL"
+echo "Phpmyadmin is running on URL: $APP_URL/phpmyadmin/index.php"

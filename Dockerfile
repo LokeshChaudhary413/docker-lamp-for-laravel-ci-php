@@ -26,7 +26,7 @@ RUN mkdir -p /home/devuser/.composer && \
     chown -R devuser:devuser /home/devuser
 
 # Enable Apache modules
-RUN a2enmod rewrite proxy proxy_http
+RUN a2enmod rewrite proxy proxy_http headers
 
 # Copy application source
 COPY . /var/www/html/
